@@ -1,0 +1,397 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[total={16.5cm,25.2cm}, top=2.5cm, left=2.5cm]{geometry}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\setlength\parindent{0.5cm} % šířka odsazení prvního řádku odstavce
+\linespread{1.25} % řádkování 1.5 dle MS Word
+
+
+%%% Údaje o práci
+% Název práce v jazyce práce (přesně podle zadání)
+\def\NazevPrace{Teorie čísel a RSA algoritmus}
+% Jméno autora
+\def\AutorPrace{Vojtěch Lengál}
+% Třída autora
+\def\TridaAutora{8.M}
+% Školní rok
+\def\SkolniRok{2017/18}
+% Seminář ve kterém práce vznikla
+\def\Seminar{Matematický seminář}
+% Datum dokončení práce
+\def\DatumDokonceni{30.1.2018}
+
+
+%% Definice různých užitečných maker (viz popis uvnitř souboru)
+\include{_makra}
+
+\begin{document}
+
+%% Titulní strana a různé povinné informační strany
+\include{_titulni_strana}
+
+%%% Strana s automaticky generovaným obsahem diplomové práce
+\tableofcontents
+
+\chapter{Úvod}
+
+Teorie čísel je odvětví matematiky, které se zabývá čísly a jejich vlastnostmi. Číslem budeme, pokud nebude v zadání řečeno jinak, rozumět přirozené číslo. 
+\\  Praktické využití tohoto oboru je překvapivě velké, s aplikací teorie čísel se rozhodně nesetkáme jen v ostatních oborech matematiky. Zejména v kryptografii a šifrování má teorie čísel velký význam.	Např. jeden z nejznámějších šifrovacích algoritmů RSA je (zjednodušeně řečeno) postaven na předpokladu, že rozložit velké číslo na součin prvočísel je velmi obtížná úloha. Z čísla $n = pq$ je tedy v rozumném čase prakticky nemožné zjistit činitele $p$ a $q$, oproti tomu násobení dvou velkých čísel je triviální úloha.
+
+\chapter{Teorie čísel} % NÁZVY KAPITOL NEJVYŠŠÍ ÚROVNĚ
+
+
+\section{Dělitelnost a kongruence}
+V této sekci se budeme zabývat dělitelností a kongruencemi. K tomu se nám bude hodit, pokud se nejdříve seznámíme s několika základními pojmy a tvrzeními. 
+
+\begin{description}
+	\item Říkáme, že číslo $a$ dělí číslo $b$ (zapisujeme $a \mid b$), pokud existuje takové celé číslo $c$, že $b=ac$. Můžeme také říct, že číslo $b$ je dělitelné číslem $a$ nebo číslo $b$ je násobek čísla $a$. V opačném případě $a$ nedělí $b$ ($a \nmid b$).
+	\item Pro každé celé číslo $n$ platí: $1\mid n$ a $n \mid n$.
+	\item Pokud $a \mid b$ a zároveň $b \mid c$ , tak $a \mid c$.
+	\item Pokud $a \mid b$ a zároveň $a \mid c$ , tak pro $b \geq c$ platí: $a \mid (b\pm c) $.
+	\item Pokud $a \mid b$ a zároveň $c \mid d$ , tak $ac \mid bd $.
+	\item Pokud $a \mid b$, tak $a\leq b$.
+	\item Pokud $a \mid b$, tak $a \mid kb$, $k \in \mathbb{N}$.
+	\item Prvočíslo je takové číslo, které má pouze 2 kladné dělitele: jedničku a samo sebe. Číslo, které má více kladných dělitelů, nazýváme číslo složené. Číslo 1 tedy není ani prvočíslo, ani číslo složené.
+	\item Základní věta aritmetiky: Každé přirozené číslo větší než 1 lze jednoznačně rozložit na součin prvočísel.
+	\item Číslo $x$ s prvočíselným rozkladem $x=p_1^{a_1}p_2^{a_2}\ldots p_n^{a_n}$ má právě $(a_1+1)(a_2+1)\ldots(a_n+1)$ dělitelů. Proč toto platí? Pro vytvoření libovolného dělitele můžeme použít prvočíslo $p_x$ právě $a_x+1$ způsoby ($p_x^0,p_x^1, \ldots , p_x^{a_x}$). Tuto úvahu můžeme zopakovat pro libovolné prvočíslo v rozkladu a získáme tedy výše uvedený vztah.
+	\item Největší společný dělitel čísel $a$, $b$ (značíme $NSD(a,b)$, popř. $D(a,b)$) je největší číslo, které dělí současně $a$ i $b$. Pokud $NSD(a,b)=1$, říkáme, že čísla $a$, $b$ jsou nesoudělná. V opačném případě jsou čísla $a$, $b$ jsou soudělná. Tedy např. čísla 6 a 15 jsou soudělná a čísla 4 a 21 jsou nesoudělná.
+	\item Pokud $a \mid bc$ a čísla $a,b$ jsou nesoudělná, tak $a \mid c$. Pokud jsou ale čísla $a,b$ soudělná, tak tvrzení nemusí platit (př. $6 \nmid 4$ a $6 \nmid 9$, ale $6\mid 4\cdot 9 =36$). 
+	\item Pro čísla $a$, $b$, $a \geq b$ platí: $NSD(a,b)=NSD(a-b,b)$. Na tomto faktu je založen tzv. Euklidův algoritmus, který slouží pro zjištění největšího společného dělitele 2 čísel. Čísla $a$, $b$ můžeme tedy snižovat, aniž bychom změnili jejich NSD. Po konečném počtu kroků skončíme ve stavu $NSD(z, 0) = z$.
+	\item Nejmenší společný násobek čísel $a$, $b$ je nejmenší číslo, které je dělitelné číslem $a$ i číslem $b$. Značíme $nsn(a,b)$, popř. $n(a,b)$.
+	\item Čtvercem nazýváme druhou mocninu přirozeného čísla.
+	\item Pokud pro prvočíslo $a$ platí $a \mid b^2$, pak i $a \mid b$. Toto tvrzení platí, protože v prvočíselném rozkladu čísla $b^2$ je prvočíslo $a$ aspoň v druhé mocnině, takže je i v rozkladu čísla $b$. Pokud $a$ není prvočíslo, tak tvrzení samozřejmě nemusí platit, př. $8 \mid 12^2=144$, ale $8 \nmid 12$.
+	\item Pokud mají čísla $a, b$ stejný zbytek po dělení $m$, říkáme, že $a$ je kongruentní s $b$ modulo $m$. Zapisujeme $a \equiv b \pmod m$. Tedy př. $7 \equiv 1 \equiv -2 \pmod 3$. Ekvivalenteně lze říci, že $m \mid (a-b)$, \\tedy $a-b \equiv 0 \pmod m $.
+	\item Pokud $a \equiv 0 \pmod m$, pak $m \mid a$.
+	\item Pokud $a \equiv b \pmod m$ a zároveň $b \equiv c \pmod m$, potom $a \equiv c \pmod m$.
+	\item Pokud $a \equiv b \pmod m$, potom $a +km \equiv b \pmod m$, $k \in \mathbb{Z} $.
+	\item Pokud $a \equiv b \pmod n$ a $c \equiv d \pmod m$ a $k$ je přirozené číslo, platí:
+	
+	\begin{description}
+		\item $a \pm c \equiv b \pm d \pmod m$
+		\item $ka \equiv kb \pmod m$
+		\item $ac \equiv bd \pmod m$
+		\item $a^k \equiv b^k \pmod m$
+	\end{description}
+	
+\end{description}
+Kromě těchto tvrzení nám často při řešení úlohy může pomoci nějaký vhodný rozklad na součin nebo rozlišení více případů (př. sudé/liché).
+\\Pokud je zadání úlohy typu: \textit{Najděte všechna čísla, která mají právě $x$ dělitelů a zároveň platí ...}, tak se vyplatí využít výše uvedený vzorec pro počet dělitelů a poté si napsat prvočíselný rozklad čísla. 
+\\Docela často se můžeme setkat i s tzv. diofantickými rovnicemi, tedy rovnicemi, které máme řešit v oboru celých, popř. přirozených čísel. U těchto typů rovnic se často snažíme řešení omezit na nějakých pár hodnot nebo (většinou pomocí kongruencí) dokázat, že žádné řešení neexistuje. Uvedeme příklad takové rovnice.\\\\
+\textit{Příklad: Nalezněte všechna celá čísla $x$ taková, že $2
+	^x(4 - x) = 2x + 4$, a ukažte, že žádná jiná už nejsou. \\Řešení: Předpokládejme, že $x$ je větší než tři. Pak je levá strana rovnice nekladná, zatímco pravá je
+	kladná. Tedy rovnost nemůže nastat a takové řešení neexistuje.
+	Podobně předpokládejme, že $x$ je menší než minus jedna. Levá strana je kladná, ale pravá
+	nekladná. Proto rovnost ani v tomto případě nemůže nastat.
+	Zbývají jen hodnoty $-1, 0, 1, 2, 3$, které snadno dosadíme do zadání. Rovnici vyhovují $x = 0,\,x = 1$ a $x = 2$, což jsou všechna řešení úlohy.}
+
+\subsubsection*{Příklady}		
+\begin{enumerate}
+
+	\item Dokažte, že pokud $a,\, b,\, c$ jsou celá čísla, potom číslo $(a - b)(b - c)(c -a)(a + b + c)$ je dělitelné
+	třemi. \hfill(MKS, 32. ročník, 1. jarní série, úloha 2)
+	\item Urči paritu\footnote{Sudé nebo liché} čísla, pro jehož nějaké 2 přirozené dělitele $d_x,d_y$ platí: $d_x+d_y=2017$. 
+	\item Pro která prvočísla $p$ je $p^2 + 2$ také prvočíslo?
+	\item Najdi všechna přirozená čísla, která mají právě 4 dělitele, přičemž součet největšího a druhého nejmenšího dělitele je 10090.
+	\item Trojice čísel $14,\,20,\,n$ má následující vlastnost: Součin každých dvou z nich je dělitelný tím třetím. Najděte všechna kladná celá čísla $n$, pro něž je tato podmínka splněna.\hfill(NÁBOJ 2016, úloha 16) 
+	\item Dokažte, že pro každé přirozené číslo $a$ existuje přirozené číslo $n > 1$ takové, že $n \mid a^n + 1$.\hfill(MKS, 34. ročník, 3. podzimní série, úloha 3)
+	\item Ve čtverci $4\times4$ je v každém poli vepsáno číslo 1. V našem tahu vybereme nějaká 3 pole, tvořící jakkoliv orientované L. V každém z těchto polí pak zvýšíme číslo o 1. Můžeme takto dosáhnout stavu, kdy bude ve všech polích číslo 33?
+	\item Řešte v oboru celých čísel rovnici $7x^2+5y^2+14=0$.
+	\item Nechť $a,\,b$ jsou nesoudělná kladná celá čísla $a$ a $b$ taková, že $\frac{a+b}{a-b}$ je také celé
+	číslo. Dokažte, že $ab + 1$, nebo $4ab + 1$ je čtverec. \hfill(TRiKS, 2016)
+	\item Rozhodněte, zda pro každých šest po sobě jdoucích čísel existuje prvočíslo, které dělí právě jedno \hfill(MKS, 36. ročník, 2. podzimní série, úloha 4)
+	z těchto čísel.	
+	\item Najděte všechny trojice celých čísel $(a, b, c)$ takové, že každý ze zlomků
+	$$\frac{a}{b+c},\,\frac{b}{c+a},\,\frac{c}{a+b}$$ má celočíselnou hodnotu.\hfill(MO 66. ročník, krajské kolo kategorie A, úloha 1)
+	\item Nechť $n$ je celé kladné číslo. Označme všechny jeho kladné dělitele $d_1, d_2, . . . , d_k$
+	tak, aby platilo $d_1 < d_2 < . . . < d_k$ (je tedy $d_1 = 1$ a $d_k = n$). Zjistěte všechny
+	takové hodnoty n, pro něž platí $d_5 -d_3 = 50$ a $11d_5 + 8d_7 = 3n$. \\ \hfill(MO 63. ročník, ústřední kolo kategorie A, úloha 1)
+\end{enumerate}	
+
+\subsubsection*{Řešení příkladů}		
+\begin{enumerate}
+	
+	\item Dokažte, že pokud $a,\,b,\,c$ jsou celá čísla, potom číslo $(a - b)(b - c)(c -a)(a + b + c)$ je dělitelné
+	třemi.
+	\\ \textit{Řešení: Pokud by nějaká dvě z čísel a,b,c dávala po dělení třemi stejný zbytek (BÚNO\footnote{Bez újmy na obecnosti} a,b), tak $3 \mid a-b$, takže celý výraz je dělitelný třemi. V opačném případě dávají každá 2 čísla z čísel $a,b,c$ po dělení třemi jiný zbytek, tedy v nějakém pořadí zbytky 0,1,2. Platí tedy $a+b+c \equiv 0+1+2 \equiv 0 \pmod 3$. Výraz je tedy vždy dělitelný třemi.}
+	\item Urči paritu čísla, pro jehož nějaké 2 přirozené dělitele $d_x,d_y$ platí: $d_x+d_y=2017$ 
+	\\ \textit{Řešení: Vzhledem k tomu, že součet dělitelů je liché číslo, a to lze zapsat jako součet 2 čísel jen jako součet lichého a sudého čísla, tak má hledané číslo aspoň jednoho sudého dělitele, takže je sudé.}
+	\item Pro která prvočísla $p$ je $p^2 + 2$ také prvočíslo?
+	\\ \textit{Řešení: Každé prvočíslo dává po dělení třemi buď zbytek 1, nebo zbytek 2, nebo se jedná o prvočíslo 3. Ať $p \equiv 1 \pmod{3}$ nebo $p \equiv 2 \pmod{3}$, tak v obou případech $p^2 \equiv 1 \pmod{3}$. Tedy $p^2+2$ je dělitelné třemi a zároveň větší nebo rovno $2^2+2=6$, takže to není prvočíslo. Zbývá rozebrat případ, kdy $p=3$. Tedy $p^2+2=11$, což je prvočíslo.\\Úloha má tedy jediné řešení $p=3$.\\Poznámka: Úloha by samozřejmě šla vyřešit i bez kongruencí, stačilo by postupně dosadit \\$p=3k+1$ a $p=3k+2$, $k \in \mathbb{Z}$. S  kongruencemi se ovšem pracuje pohodlněji, protože se vyhneme roznásobování výrazů. }
+	\item Najdi všechna přirozená čísla, která mají právě 4 dělitele, přičemž součet největšího a druhého nejmenšího dělitele je 10090.
+	\\ \textit{Řešení: Protože číslo $4$ umíme rozložit na přirozená čísla jen dvěma způsoby a to $4=4\cdot1=2\cdot2$, tak mohou taková čísla n být jen ve tvaru $n=p^3$ nebo $n=pq$, kde $p,q,p<q$ jsou prvočísla.\\Pokud $n=p^3$, tak má podle zadání platit $p+p^3=10090$, tedy $p(p^2+1)=10090=2\cdot5\cdot1009$. Uvážíme-li ještě, že $p<(p^2+1)$, tak musí být $p=2$ nebo $p=5$, ale ani jedna z možností zřejmě nevyhovuje.\\Pokud $n=pq$, tak si můžeme podmínku ze zadání přepsat jako $p+pq=p(q+1)=10090=\\=2\cdot5\cdot1009$. Vzhledem k tomu, že $p<q$ a $p,q$ jsou prvočísla, tak buď $p=2$ nebo $p=5$.Pro $p=2$ ale vyjde $q=5044$, což není prvočíslo. Pro $p=5$ vyjde $q=2017$, což je prvočíslo. \\Tedy $n=5\cdot2017=10085$. }
+	\item Trojice čísel $14,\, 20,\, n$ má následující vlastnost: Součin každých dvou z nich je dělitelný tím třetím. Najděte všechna kladná celá čísla $n$, pro něž je tato podmínka splněna.
+	\\ \textit{Řešení: Číslo $n$ je dělitelem $14\cdot20 = 2^3
+		\cdot5 \cdot 7$, takže se v jeho rozkladu mohou vyskytnout jedině prvočísla 2, 5 a 7, přičemž dvojka bude nanejvýš ve třetí mocnině a pětka se sedmičkou nanejvýš v první mocnině.
+		Podmínka $14 \mid 20n => 7 \mid 10 n$ znamená, že je $n$ násobkem 7 ($NSD(7,10)=1$). Podobně z předpokladu $20 \mid 14n => 10 \mid 7n$ získáváme $10 \mid n$.
+		Dohromady platí $70 \mid n$. Je snadné ověřit, že všechna čísla, která připadají v úvahu, tj. 70, 140 a 280, zadání vyhovují.}
+	\item Dokažte, že pro každé přirozené číslo $a$ existuje přirozené číslo $n > 1$ takové, že $n \mid a^n + 1$.
+	\\ \textit{Řešení: Pokud je a liché, potom je $a^2$ liché a $a^2 + 1$ je sudé, číslo $n = 2$ tedy vyhovuje podmínce v~zadání. Pokud je a sudé, položíme $n = a + 1$. Potom platí: $a^n=(n-1)^n \equiv (-1)^n=	-1 \pmod n$, neboť n je liché. Pokud si tuto kongruenci přepíšeme podle definice, dostaneme $n \mid a^n + 1$, což jsme přesně chtěli.}
+	\item Ve čtverci $4\times4$ je v každém poli vepsáno číslo 1. V našem tahu vybereme nějaká 3 pole, tvořící jakkoliv orientované L. V každém z těchto polí pak zvýšíme číslo o 1. Můžeme takto dosáhnout stavu, kdy bude ve všech polích číslo 33?
+	\\ \textit{Řešení: Označíme S jako součet všech čísel v tabulce (tedy na začátku $S=16$). V každém našem tahu se zbytek S po dělení třemi nezmění. A protože na začátku $S\equiv1\pmod3$, tak S nikdy nebude dělitelné třemi, tedy do takového stavu se nemůžeme dostat. (Pokud by všechna čísla v tabulce byla 33, tak $S=33\cdot16$ a tedy zřejmě $3\mid S$)}
+	\item Řešte v oboru celých čísel rovnici $7x^2+5y^2+14=0$.
+	\\ \textit{Řešení: Rovnici rozepíšeme: $7x^2+5y^2+14=5(x^2+y^2+2)+2x^2+4=0$ Levá strana rovnice dává po dělení pěti stejný zbytek jako $2x^2 + 4$, ale jelikož $x^2$ dává pouze zbytky $0, 1$ a $4$ (to vyzkoušíme postupným dosazováním $x\equiv 0,1,..,4 \pmod 5 $), tak levá strana rovnice není nikdy dělitelná pěti a zadaná rovnice proto nemá žádné řešení.}
+	\item Nechť $a,\,b$ jsou nesoudělná kladná celá čísla $a$ a $b$ taková, že $\frac{a+b}{a-b}$ je také celé
+	číslo. Dokažte, že $ab + 1$, nebo $4ab + 1$ je čtverec.
+	\\ \textit{Řešení: Označíme $m=\frac{a+b}{a-b}$, pak $a+b = ma-mb$, odsud ${a \over b} = {m+1\over m-1}$ . Vzhledem k nesoudělnosti $a$ a $b$ existuje $k$ takové, že $m + 1 = ka$ a $m - 1 = kb$. Vynásobením těchto rovností: $m^2 - 1 = k^2ab$, takže $m^2 = k^2ab + 1$. $k$ je dělitelem $m + 1$ a $m - 1$, takže dělí i jejich rozdíl 2. $k$ tedy musí být 1, nebo 2. Dosazením do předchozí rovnice nám vychází, že $ab + 1$, nebo $4ab + 1$ je skutečně čtverec.}
+	\item Rozhodněte, zda pro každých šest po sobě jdoucích čísel existuje prvočíslo, které dělí právě jedno
+	z těchto čísel.	
+	\\ \textit {Řešení: Je zřejmé, že z každých šesti po sobě jdoucích čísel jsou právě tři lichá. Dále dokážeme sporem, že
+		z těchto tří lichých čísel je maximálně jedno dělitelné třemi. Předpokládejme, že jsou dvě z nich
+		dělitelná třemi. Pak je jejich rozdíl také dělitelný třemi a jelikož jsou obě lichá, tak jejich rozdíl je
+		sudý. Tento rozdíl je tedy dělitelný šesti a jelikož jde o různá čísla, tak se musí lišit alespoň o šest.
+		Pak ale nemohou být obě v šestici po sobě jdoucích čísel.
+		Analogicky dokážeme, že maximálně jedno z těchto tří lichých čísel je dělitelné pěti. Maximálně
+		dvě z nich jsou proto dělitelná třemi nebo pěti, tedy v každých šesti po sobě jdoucích číslech existuje
+		číslo, které není dělitelné dvěma, třemi ani pěti. Toto číslo je buďto rovno jedné, nebo má ve svém
+		prvočíselném rozkladu prvočíslo větší nebo rovno sedmi (pro všechna čísla větší než jedna existuje
+		prvočíselný rozklad). Nejprve vyřešíme první případ. Číslo jedna je obsaženo jen v šestici čísel 1,
+		2, 3, 4, 5, 6. Pro tuto šestici je číslo pět prvočíslem, které dělí právě jedno z čísel v ní. Ve druhém
+		případě toto prvočíslo nemůže dělit žádné další číslo ze šestice, jelikož rozdíl každých dvou jeho
+		násobků je větší nebo roven sedmi.
+		Tedy pro každých šest po sobě jdoucích čísel existuje prvočíslo, které dělí právě jedno z nich.
+	}
+	\item Najděte všechny trojice celých čísel $(a, b, c)$ takové, že každý ze zlomků
+	$$\frac{a}{b+c},\,\frac{b}{c+a},\,\frac{c}{a+b}$$ má celočíselnou hodnotu.
+	\\ \textit{Řešení: Uvažovaná trojice zlomků je symetrická v tom smyslu, že nahradíme-li trojici
+		celých čísel $(a, b, c)$ jejich libovolnou permutací, dostaneme zase (až na pořadí) tutéž
+		trojici zlomků. Stejně tak, nahradíme-li čísla a, b, c čísly opačnými. Tato skutečnost
+		nám usnadní následující rozbor případů.
+		\\Předpokládejme tedy, že čísla a, b, c jsou taková, že všechny tři uvažované zlomky
+		mají celočíselnou hodnotu. Pokud se mezi nimi nachází nula, stačí bez újmy na obecnosti
+		vyšetřit případ a = 0. Po dosazení do uvažovaných zlomků dostáváme, že zlomky $\frac{b}{c}$ a $\frac{c}{b}$ mají celočíselnou hodnotu. Odtud plyne, že b i c jsou nenulová a je $|b|\geq|c|$ a zároveň $|c|\geq|b|$, proto $c = \pm b$. Navíc číslo b + c je jmenovatelem prvního zlomku, proto $b+c\neq0$, takže musí být b = c. Celkově tak dostáváme (zjevně vyhovující) trojice $(0, c, c)$ a jejich permutace pro každé nenulové celé číslo c. \\Zbývá vyřešit případ, kdy $abc\neq0$.
+		Vzhledem k pozorování z prvního odstavce budeme předpokládat, že alespoň dvě
+		z čísel $a,\, b,\, c$ jsou kladná. Pokud by byla kladná všechna tři, bude zlomek, který má
+		v čitateli nejmenší z čísel $a,\, b,\, c$ ležet mezi 0 a 1, takže nemůže mít celočíselnou hodnotu.
+		Nechť tedy a, b jsou kladná čísla a $c = -d$ pro kladné d. Po dosazení do zadání dostaneme, že zlomky $$\frac{a}{d-b},\,\frac{b}{d-a},\,\frac{d}{a+b}$$ mají celočíselnou hodnotu. Z posledního z nich je jasné, že $d \geq a + b$. Proto má první
+		zlomek kladný jmenovatel, a protože jeho hodnota je celé číslo, musí platit $a \geq d - b$
+		neboli $d \leq a+b$. Je tudíž $d = a + b$ neboli $c = - a - b$ a dostáváme tak v souhrnu trojice $(a, b, c)$ nenulových čísel, pro které platí $a + b + c = 0$. Všechny takové trojice vyhovují, neboť hodnota všech tří uvažovaných zlomků je pro ně rovna $-1$.
+		\\Úloze vyhovují všechny trojice $(0,c,c)$, $(c,0,c)$ a $(c,c,0)$, kde $c$ je nenulové celé číslo, a všechny trojice $(a,b,c)$ nenulových celých čísel, pro něž platí $a + b + c = 0$.}
+	\\\\ \textit{Jiné řešení: Případ, kdy $abc\neq0$ vyřešíme ještě jiným způsobem. Pokud jsou zlomky celá čísla, tak jistě platí, že absolutní hodnota jmenovatele je menší nebo rovna absolutní hodnotě čitatele. Získáme tedy soustavu tří rovnic:
+		\begin{align*}
+		|b+c| \leq a\\
+		|c+a| \leq b\\
+		|a+b| \leq c\\
+		\end{align*}
+		Každou rovnici umocníme na druhou (zřejmě platí $|b+c|^2 = (b+c)^2$).
+		\begin{align*}
+		(b+c)^2 \leq a^2\\
+		(c+a)^2 \leq b^2\\
+		(a+b)^2 \leq c^2\\
+		\end{align*}
+		Po sečtení těchto rovnic a vykrácení členů nám vyjde: $$a^2 + b^2 + c^2 +2ab+2ac+2bc \leq 0$$ Tedy $(a+b+c)^2\leq0$, takže dostáváme stejně jako v 1. řešení trojice (a,b,c) nenulových celých čísel, pro něž platí $a + b + c = 0$.}
+	\item Nechť $n$ je celé kladné číslo. Označme všechny jeho kladné dělitele $d_1, d_2, . . . , d_k$
+	tak, aby platilo $d_1 < d_2 < . . . < d_k$ (je tedy $d_1$ = 1 a $d_k$ = n). Zjistěte všechny
+	takové hodnoty $n$, pro něž platí $d_5 -d_3 = 50$ a $11d_5 + 8d_7 = 3n$.
+	\\ \textit{Řešení: Rozlišíme, zda hledané n je liché či sudé.
+		\\(i) Nechť n je liché, pak i všechna $d_i$ jsou lichá. Z rovnosti $11d_5 + 8d_7 = 3n$ plyne $d_7 \mid 11d_5$ a také $d_5 \mid 8d_7$ neboli $d_5 \mid d_7$. Z $d_5 \mid d_7 \mid 11d_5$ s ohledem na $d_7 > d_5$ máme $d_7 = 11d_5$ a po dosazení do rovnosti $11d_5+8d_7 = 3n$ dostaneme $99d_5 = 3n$ neboli $33d_5 = n$. Vidíme, že čtyři čísla 1, 3, 11 a 33 jsou dělitelé čísla n, a to dokonce jediní dělitelé menší než 50, neboť pro pátý dělitel $d_5$ už podle zadání platí $d_5 = d_3 + 50 > 50$. Máme tedy $d_1 = 1, d_2 = 3, d_3 = 11, d_4 = 33, d_5 = d_3 + 50 = 61$, a proto $n = 33d_5 = 33 \cdot 61 = 2 013$. Toto číslo skutečně vyhovuje, neboť jeho nejmenší dělitelé jsou v předchozí větě vypsáni správně, navíc platí $d_6 = 61\cdot3 $ a $d_7 = 61 \cdot 11$, takže je skutečně splněno $d_7 = 11d_5$, tedy i vše požadované.
+		\\(ii) Nechť n je sudé. Z rovnosti $11d_5 + 8d_7 = 3n$ pak plyne $2 \mid d_5$, takže rovněž
+		$2 \mid d_5 - 50 = d_3$. Protože $d_1 = 1$ a $d_2 = 2$, nemůže být $d_3 = 3$, takže je buď $d_3 = 4$,
+		nebo $d_3 = 2t$, kde $t > 2$. Poslední však možné není (číslo $t < d_3$ by chybělo ve výpisu
+		nejmenších dělitelů čísla $n$), a proto je nutně $d_3 = 4$. Pak je ovšem $d_5 = d_3 + 50 = 54$,
+		a tedy $3 \mid n$, přestože 3 není mezi nejmenšími děliteli čísla $n$. Žádné vyhovující sudé $n$
+		proto neexistuje.
+		\\Úloha má jediné řešení $n = 2 013$.}
+\end{enumerate}	
+
+	
+	
+	
+\newpage
+
+
+
+\section{Prvočísla a rozklad na součin}
+Prvočíslo je číslo, které má právě 2 kladné dělitele, a to jedničku a samo sebe. Číslo 1 za prvočíslo nepovažujeme. Jak zjistíme, jestli je číslo $n$ prvočíslo? Můžeme zkoušet všechny čísla od 2 do $n$, nebo chytřeji do $\sqrt{n}$. 
+\\Pomocí tzv. Erastosthenova síta můžeme generovat všechna prvočísla od 2 do $n$. Tento jednoduchý algoritmus funguje „prosíváním“ seznamu čísel – na počátku seznam obsahuje všechna čísla v daném rozsahu $2, 3, 4, \ldots, n$. Poté se opakovaně první číslo ze seznamu vyjme, toto číslo je prvočíslem. Ze seznamu se pak odstraní všechny násobky tohoto čísla (což jsou čísla složená). Tak se pokračuje do doby, než je ze seznamu odstraněno poslední číslo. 
+\\ V mnoha úlohách s prvočísly využijeme rozklad na součin. K čemu nám to je? Vtip je v tom, že dělitelé prvočísla $p$ jsou jen 1 a $p$. Takže pokud rozložíme prvočíslo $p=xy$, tak buď $x=p,y=1$, nebo $y=p,\,x=1$ (Pokud mohou být $x,y$ záporná čísla, tak přibydou ještě možnosti $x=-p,\,y=-1$, resp. $y=-p,\,x=-1$).
+\\Uvedeme zde několik základních rozkladů mnohočlenů: 
+\begin{description}
+	\item $(a+b)^2=a^2+2ab+b^2$
+	\item $(a-b)^2=a^2-2ab+b^2$
+	\item $a^2-b^2=(a-b)(a+b)$
+	\item $a^3-b^3=(a-b)(a^2+ab+b^2)$
+	\item $a^3+b^3=(a+b)(a^2-ab+b^2)$
+\end{description}
+Bohužel často v úlohách nejsou pěkné rozklady podle vzorce, v tom případě je vhodné povytýkat nebo přičíst k oběma stranám vhodnou hodnotu a následně se pokusit výraz rozložit. Dobře je to vidět na následujícím příkladu.
+\\\\ \textit{Příklad: Najděte všechny dvojice prvočísel $p, q$ takové, že $2p + 4q = pq - 1$.
+	\\Řešení: Postupně upravujeme rovnici:
+	\begin{align*}
+	2p + 4q = pq - 1\\
+	2p+4q-pq=-1\\
+	pq-2p-4q=1\\
+	pq-2p-4q+8=9\\
+	p(q-2)-4(q-2)=9\\
+	(p-4)(q-2)=9
+	\end{align*} 
+	Činitel $q - 2$ je nezáporný, protože $q$ je prvočíslo. Nezáporný tedy musí být i činitel $p - 4$. Jsou právě tři možnosti, jak číslo 9 rozložit na součin dvou nezáporných čísel: $9=1\cdot9=3\cdot3=9\cdot 1$. Z nich získáme celkem tři řešení $(p, q) \in \{(5; 11),(7; 5),(13; 3)\}$.}
+\subsubsection*{Příklady}		
+\begin{enumerate}
+	\item Řešte v oboru přirozených čísel rovnici $p+400=a^2$, kde $p$ je prvočíslo
+	\item Najděte všechna přirozená čísla $a,\,b$ pro která platí $ab=a+b$.
+	\item Jaký největší obsah může mít obdélník s obvodem 20 cm?
+	\item Nalezněte všechna prvočísla, která nelze zapsat jako součet dvou složených čísel.\\ \hfill(MKS, 36. ročník, 2. podzimní série, úloha 4)
+	\item Najdi všechna přirozená čísla $x$, pro která platí, že $x^2+x$ je druhou mocninou přirozeného čísla. 
+	\item $n$ je součin dvou po sobě jdoucích přirozených čísel. Dokažte, že je možné doplnit za $n$ dvě číslice tak, aby vzniklé číslo bylo čtvercem. \hfill(TRiKS, 2016)
+	\item Najděte  všechny neuspořádané trojice prvočísel $p, q, r$ takové, že $pqr = 101(p + q + r)$ nebo $p + q + r = 101pqr$. \hfill(TRiKS, 2017)
+	\item Najděte všechna celá čísla $n$, pro něž je $n^4 - 3n^2 + 9$ prvočíslo. \\\hfill(MO 61. ročník, ústřední kolo kategorie A, úloha 1)
+	\item Najděte všechna prvočísla $p$, pro něž existuje přirozené číslo $n$ takové, že $p^n + 1$ je třetí mocninou některého přirozeného čísla.\\ \hfill (MO 66. ročník, domácí kolo kategorie A, úloha 1)
+	\item Dokažte, že pro žádné přirozené číslo $n$ není číslo $27^n - n^{27}$ prvočíslo. \\ \hfill(Slovenská MO, 57. ročník, ústřední kolo kategorie A, úloha 4)
+\end{enumerate}	
+
+\subsubsection*{Řešené příklady}	
+	
+\begin{enumerate}
+	\item Řešte v oboru přirozených čísel rovnici $p+400=a^2$, kde $p$ je prvočíslo
+	\\ \textit{Řešení: Rovnici upravíme do tvaru $p = (a -20)(a + 20)$. Protože p je prvočíslo, tak musí nutně platit $a - 20 = 1$ a také $a + 20 = p$. Z toho plyne $a = 21$ a $p = 41$, což je skutečně jediným řešením této rovnice.}
+	\item Najděte všechna přirozená čísla $a,\,b$ pro která platí $ab=a+b$.
+	\\ \textit{Řešení: Rovnici upravíme do tvaru: $ab-a-b+1=1$, tedy $(a-1)(b-1)=1$. Číslo 1 můžeme napsat jako součin dvou přirozených čísel jen jako $1\cdot1$, tedy a = b = 2.}
+	\item Jaký největší obsah může mít obdélník s obvodem 20 cm?
+	\\ \textit{Řešení: Strany obdélníku označíme a,b. Podle zadání a + b = 10. Teď hledáme nejvyšší hodnotu výrazu $ab=b(10-b)=-b^2+10b=-(b-5)^2+25$. Pro $b = 5$ je $-(b-5)^2=0$, jinak $-(b-5)^2<0$. Největší možný obsah je tedy $25\,cm^2$.}
+	\\\\ \textit{Jiné řešení: Označíme strany obdélníka $a = 5 + x, b = 5 - x$ $(a+b=10)$. Takže \\$ab=(5+x)(5-x)=25-x^2$. Největší možný obsah je tedy $25\, cm^2$ (pro x = 0, tedy: a = b = 5).}
+	\item Nalezněte všechna prvočísla, která nelze zapsat jako součet dvou složených čísel.
+	\\ \textit{Řešení: Nejprve si uvědomme, že všechna sudá čísla větší než dva jsou složená, a tudíž i všechna prvočísla
+		větší než dva jsou lichá. Číslo dva zjevně nelze zapsat jako součet dvou složených čísel (nejmenší
+		složené číslo je čtyři). Dále tedy všechna prvočísla, která nám zbývá vyřešit, jsou lichá.
+		Jelikož liché číslo lze zapsat pouze jako součet sudého a lichého čísla, všechna prvočísla menší
+		než součet nejmenšího sudého složeného čísla a nejmenšího lichého složeného čísla (tj. čtyři a devět)
+		takto zapsat nelze. Ovšem každé prvočíslo $p \geq 13$ lze zapsat jako $p = 9 + (p - 9)$, kde devět je
+		složené číslo a $p - 9$ je sudé číslo větší než dva, tudíž rovněž složené. Proto žádné takové prvočíslo
+		nebude hledaným řešením.
+		Řešeními jsou tedy právě ta prvočísla, která jsou menší než 13, tedy 2, 3, 5, 7 a 11.}
+	\item Najdi všechna přirozená čísla $x$, pro která platí, že $x^2+x$ je druhou mocninou přirozeného čísla.  
+	\\ \textit{Řešení: Pro všechna přirozená čísla $x$ platí $x^2 < x^2+x < x^2+2x+1 = (x+1)^2$, tedy $x^2+x$ je čtverec mezi $x^2$ a $(x+1)^2$. Mezi čtverci dvou po sobě jdoucích čísel ale žádný jiný čtverec není, takže žádné takové $x$ neexistuje. }
+	\item $n$ je součin dvou po sobě jdoucích přirozených čísel. Dokažte, že je možné doplnit za $n$ dvě číslice tak, aby vzniklé číslo bylo čtvercem.
+	\\ \textit{Řešení: Za $n$ napíšeme dvojčíslí 25, vznikne tak číslo $100n+25$. Pak platí: $n=k(k+1)$, tedy $100n+25=100k(k+1)+25=100k^2+100k+25=(10k+5)^2$.}
+	\item Najděte všechny neuspořádané trojice prvočísel $p, q, r$, takové, že $pqr = 101(p + q + r)$, nebo $p + q + r = 101pqr$.
+	\\ \textit{Řešení: Nejprve BÚNO uvažujme, že r je největší, tak $p+q+r \leq 3r$, ale $pqr \geq 4r$,
+		takže $pqr > p + r + q$, proto $pqr = 101(p + r + q)$.
+		Číslo 101 je prvočíslo, proto BÚNO $r = 101$, pak $pq = p+q+101$ a $(p-1)(q-1) = 102 = 1 \cdot 102 = 2 \cdot 51 = 3 \cdot 34 = 6 \cdot 17$, takže p a q jsou 2 a 103, proto $\{p, q, r\} = \{2, 101, 103\}.$}
+	\item Najděte všechna celá čísla $n$, pro něž je $n^4 - 3n^2 + 9$ prvočíslo
+	\\ \textit{Řešení: Zadaný výraz lze jednoduchou úpravou rozložit na součin: $$n^4 - 3n^2 + 9=n^4 + 6n^2 + 9 - 9n^2 = (n^2 + 3)^2 - (3n)^2= (n^2 + 3n +3)(n^2 - 3n +3)$$ Aby součin dvou celých čísel byl prvočíslem p, musí být jeden z činitelů roven $1$ nebo $-1$ (a druhý $p$, resp. $-p$). Diskriminanty obou kvadratických trojčlenů jsou však $(\pm3)^2 - 4 \cdot 3 = -3$, tedy záporné, takže oba trojčleny nabývají jen kladné hodnoty. Vzhledem k tomu stačí uvažovat jen kvadratické rovnice: $$n^2 + 3n +3=1 \hspace{10pt}a\hspace{10pt} n^2 - 3n +3=1$$ Řešením první z nich jsou čísla $n = -1$ a $n = -2$, pro něž druhý činitel nabývá
+		hodnot 7 a 13, což jsou prvočísla. Řešením druhé rovnice jsou n = 1 a n = 2, pro něž první činitel opět nabývá prvočíselných hodnot 7 a 13.\\\ Zadaný výraz je prvočíslem, právě když $n \in \{-2, -1, 1, 2\}$.}
+	
+	\item Najděte všechna prvočísla $p$, pro něž existuje přirozené číslo $n$ takové, že $p^n + 1$ je třetí mocninou některého přirozeného čísla. 
+	\\ \textit{Řešení: Předpokládejme, že pro přirozené číslo a platí $p^n + 1 = a^3$ (zjevně $a \geq 2$). Tuto rovnost upravíme tak, aby bylo možné jednu stranu rozložit na součin: $$p^n=a^3-1=(a-1)(a^2+a+1)$$ Z tohoto rozkladu plyne, že pokud $a > 2$, jsou čísla $a - 1$ i $a^2 + a + 1$ mocninami prvočísla p (s kladnými celočíselnými exponenty). \\V případě $a > 2$ tak platí $a-1 = p^k$, neboli $a = p^k +1$ pro kladné celé číslo k, což po dosazení do trojčlenu $a^2+a+1$ dává hodnotu $p^{2k}+3p^k+3$. Jelikož $a-1 = p^k < a^2+a+1$,
+		je určená hodnota trojčlenu $a^2 + a + 1$ vyšší mocninou prvočísla p, zaručeně proto platí: $p^k \mid p^{2k}+3p^k+3$, tedy $p^k \mid 3$. Odtud plyne, že musí být $p = 3$ a $k = 1$, a tedy $a = p^k + 1 = 4$. Číslo $a^2 +a+ 1 = 21$ však není mocninou tří, a tak v případě $a > 2$ žádné prvočíslo p rovnici $p^n + 1 = a^3$ nevyhovuje, ať je exponent n zvolen jakkoli.
+		\\Pro $a = 2$ dostáváme rovnici $p^n = 7$, proto je $p = 7$ jediné vyhovující prvočíslo.}
+		\\\\ \textit{Jiné řešení: Druhý čitatel je zřejmě větší než první a oba čitatele jsou přirozená čísla. $p^n$ má všechny přirozené dělitele tvaru $p^k$ $(0 \leq k \leq n)$, $k \in N$. Tedy platí, že pokud 2. čitatel vydělíme prvním, dostaneme přirozené číslo (zřejmě $a\neq 1$)$$\frac{a^2 +a+ 1}{a-1}=\frac{a^2 -2a+ 1+3a}{a-1}=\frac{(a-1)^2+3a}{a-1}=a-1+\frac{3(a-1)+3}{a-1}=$$ $$=a+2+\frac{3}{a-1} \in \mathbb{N}$$  $ => a-1 \mid 3$, tedy buď $a=2$, nebo $a=4$. Tyto případy rozebereme stejně jako v 1. řešení a dojdeme k jedinému výsledku $p = 7$.}
+		\item Dokažte, že pro žádné přirozené číslo $n$ není číslo $27^n - n^{27}$ prvočíslo.
+		\\ \textit{Řešení:$$27^n - n^{27}=\left(3^n\right)^3 - \left(n^9\right)^3=\left(3^n-n^9\right)\left(9^n+3^n \cdot n^9+n^{18}\right)$$ Teď úlohu dokážeme sporem, budeme tedy předpokládat, že takové číslo $n$ existuje, a tedy $27^n - n^{27}$ je prvočíslo. V tom případě se musí 1. závorka rovnat 1, protože druhá závorka je zřejmě větší než jedna. Tedy: $3^n-n^9=1 => 3^n=n^9+1=\left(n^3\right)^3+1=\left(n^3+1\right)\left(n^6-n^3+1\right)$.\\První závorka je větší jen pokud $2n^3>n^6$, tedy po úpravě $n^3<2$, což platí jen pro $n=1$, které ale zřejmě úloze nevyhovuje.
+		\\V ostatních případech je druhá závorka větší, tedy můžeme říct že ${n^6-n^3+1 \over n^3+1}\in \mathbb{N}$, protože obě závorky jsou mocniny prvočísla 3. $${n^6-n^3+1 \over n^3+1}=\frac{(n^3+1)^2-3n^3 }{n^3+1}=n^3+1-\frac{3(n^3+1)-3 }{n^3+1}=n^3-2+\frac{3}{n^3+1}\in \mathbb{N}$$ Tedy buď $n^3+1=1$, nebo $n^3+1=3$. To je ale spor, protože žádná z těcto rovnic nemá v oboru přirozených čísel řešení, a proto takové číslo $n$ neexistuje.
+	}	
+	
+\end{enumerate}		
+
+	
+\newpage
+	
+\section{Cifry}
+V této sekci se budeme zabývat ciframi a jejich vlastnostmi. Nejdříve si připomeneme jednoduchá kritéria dělitelnosti, ta se zakládají na ciferném součtu, nebo na posledních několika cifrách daného čísla. 
+\begin{description}
+	\item Číslo je dělitelné dvěma právě tehdy, když má na místě jednotek sudou číslici.
+	\item Číslo je dělitelné třemi právě tehdy, když je jeho ciferný součet dělitelný třemi.
+	\item Číslo je dělitelné čtyřmi právě tehdy, když je poslední dvojčíslí dělitelné čtyřmi.
+	\item Číslo je dělitelné pěti právě tehdy, když je jeho poslední číslice 0 nebo 5.
+	\item Číslo je dělitelné osmi právě tehdy, když je jeho poslední trojčíslí dělitelné osmi.
+	\item Číslo je dělitelné devíti právě tehdy, když je jeho ciferný součet dělitelný devíti.
+	\item Číslo je dělitelné deseti právě tehdy, když je jeho poslední číslice 0.
+	\item Číslo je dělitelné $10^n$ právě tehdy, když jeho $n$ posledních číslic jsou nuly. 
+	\item Číslo je dělitelné jedenácti právě tehdy, když je rozdíl součtu číslic na sudém a lichém místě dělitelný jedenácti, tedy př. $11 \mid 5357$, protože $11 \mid +5-3+5-7=0$.
+\end{description}
+Kritéria dělitelnosti můžeme skládat, pro $n=pq$, kde $p,q$ jsou nesoudělná čísla je libovolné číslo dělitelné číslem $n$, pokud jsou zároveň splněná kritéria dělitelnosti čísly $p,q$. 
+\\Př. Číslo je dělitelné 24 právě tehdy, když je zároveň dělitelné osmi i třemi.
+\\\\Každé číslo $n$ můžeme zapsat v desítkové soustavě $n = a_k \cdot 10^k + a_{k-1} \cdot 10^{k-1} + \ldots + a_1 \cdot 10 + a_0$. Tedy číslo $\overline{xyz}$ můžeme zapsat jako $100x+10y+z$.
+\\Ciferný součet čísla $n$ budeme značit $S(n)$. Platí:
+\begin{itemize}
+\item[] $S(n)=S(10^xn)$. Jen vynásobíme $n$ mocninou deseti, takže $S(n)$ se nezmění.
+\item[] $9 \mid n - S(n)$. Toto platí, protože $n - S(n)=a_k \cdot 10^k + a_{k-1} \cdot 10^{k-1} + \ldots + a_1 \cdot 10 + a_0 - (a_k + a_{k-1} + \\+\ldots + a_1 + a_0)=9(a_k \cdot 11\ldots1 + a_{k-1} \cdot 1\ldots1 + \ldots + a_2 \cdot 11 + a_1)$.
+\item[] $s(m + n) \leq s(m) + s(n)$. Podívejme se, jak se sčítají čísla $m$ a $n$ pod sebou. Na každém
+	řádu je buď součet příslušných cifer z $m$ a $n$, nebo dojde k přenosu jedničky. Pak se číslo
+	na tomto řádu sníží o 10 a číslo řádu o jedna vyššího se zvýší o jedna, ciferný součet se
+	tedy celkově sníží o 9. Proto platí dokazovaná nerovnost.
+\end{itemize}
+
+\subsubsection*{Příklady}		
+\begin{enumerate}
+	\item Jaký je ciferný součet čísla $25^{64}\cdot32^{25}$ ?
+	\item Kolik existuje kladných celých čísel, jejichž první číslice (tj. ta nejvíce vlevo) se rovná počtu jejich cifer? \hfill(NÁBOJ 2016, úloha 6)
+	\item Když si Kuba hrál se svým oblíbeným přirozeným číslem, zjistil zajímavou věc. Nejenže dané číslo bylo palindrom\footnote{Číslo, které se čte stejně zepředu i zezadu, př. 1526251} a dávalo po dělení čtyřmi zbytek 1 a po dělení dvaceti pěti zbytek 22, ale dokonce bylo nejmenším číslem, které všechny předchozí body splňuje. Které číslo to bylo?
+\hfill (MKS, 34. ročník, 3. podzimní série, úloha 1)
+	
+	\item Najděte nejmenší nezáporné celočíselné řešení rovnice $n-2\cdot S(n)=2016$. \\\hfill(NÁBOJ 2016, úloha 5)
+	\item Najděte všechny čtyřciferné druhé mocniny přirozených čísel ve tvaru $\overline{xxyy}$, kde $x$ a $y$ jsou ne nutně různé číslice. \hfill(NÁBOJ 2017, úloha 27)
+	\item Mějme číslo $n$ zapsané v desítkové soustavě, přičemž jeho cifry zprava doleva
+	klesají. Určete ciferný součet čísla $9n$ (v desítkové
+	soustavě). \hfill(TRiKS 2016)
+	\item Na tabuli je napsáno v desítkové soustavě celé kladné číslo $N$. Není-li jednomístné,
+	smažeme jeho poslední číslici $c$ a číslo $m$, které na tabuli zůstane, nahradíme číslem
+	$|m - 3c|$. (Například bylo-li na tabuli číslo $N = 1 204$, po úpravě tam bude $120 - 3 \cdot 4 = 108$.) Najděte všechna přirozená čísla $N$, z nichž opakováním popsané
+	úpravy nakonec dostaneme číslo 0.\hfill(MO 62. ročník, ústřední kolo kategorie A, úloha 4)
+\end{enumerate}	
+
+
+\subsubsection*{Řešení příkladů}		
+\begin{enumerate}
+	\item Jaký je ciferný součet čísla $25^{64}\cdot32^{25}$ ?
+	\\ \textit{Řešení: $25^{64}\cdot32^{25}=5^{128}\cdot2^{125}=5^3\cdot10^{125}$ Číslo $5^3\cdot10^{125}$ je tvořeno číslicemi 1, 2, 5 a sto dvaceti pěti 0. Proto je jeho ciferný součet roven 8.}
+	\item Kolik existuje kladných celých čísel, jejichž první číslice (tj. ta nejvíce vlevo) se rovná počtu jejich cifer?
+	\\ \textit{Řešení: Pro každou nenulovou číslici $n$ existuje právě $10^{n-1}$ čísel začínajících n splňujících podmínku zadání -- jsou to čísla mezi $\overline{n0\ldots0}$ a $\overline{n9\ldots9}$. Dohromady je tedy hledaných čísel $$1+10+\ldots+100\,000\,000=111\,111\,111$$}
+	\item Když si Kuba hrál se svým oblíbeným přirozeným číslem, zjistil zajímavou věc. Nejenže dané číslo bylo palindrom a dávalo po dělení čtyřmi zbytek 1 a po dělení dvaceti pěti zbytek 22, ale dokonce bylo nejmenším číslem, které všechny předchozí body splňuje. Které číslo to bylo?	
+	\\ \textit{Řešení: Kubovo oblíbené přirozené číslo dávalo zbytek 22 po dělení dvaceti pěti, tudíž jeho poslední
+		dvojčíslí bylo 22, 47, 72 nebo 97. Protože zbytek po dělení čtyřmi závisí pouze na posledním
+		dvojčíslí, hledané číslo musí končit na 97, jenž jediné z uvedených dvojčíslí dává zbytek 1 po
+		dělení čtyřmi. Proto Kubovo oblíbené číslo bylo nejmenší palindrom končící na 97, což je 797.
+	}
+	\item Najděte nejmenší nezáporné celočíselné řešení rovnice $n-2\cdot S(n)=2016$.
+	\\ \textit{Řešení: Číslo $n-S(n)$ je vždy dělitelné devítkou. Protože je devítkou dělitelné i 2016, musí jí být dělitelné rovněž $S(n)$, a tedy také $n$. Zjevně $n<3000$, takže $S(n)\leq2+9+9+9$, z čehož vyplývá nerovnost $n=2016+2S(n)\leq2074$. Nyní už jen zbývá dosadit $S(n)=9$ a najdeme nejmenší řešení, kterým je 2034.}
+	\item Najděte všechny čtyřciferné druhé mocniny přirozených čísel ve tvaru $\overline{xxyy}$, kde $x$ a $y$ jsou ne nutně různé číslice.
+	\\ \textit{Řešení: Označme hledané čtyřciferné číslo N. Potom $N=1000x+100x+10y+y=110x+11y=\\=11\cdot(10x+y)$, takže N je dělitelné jedenácti. Vzhledem k tomu, že N je čtverec, musí být dělitelné dokonce $11^2$ a můžeme ho zapsat ve tvaru $N = 11^2k^2$, kde k je nějaké přirozené číslo. Při tomto značení platí, že $100x+y = 11k
+		^2$. Levá strana rovnosti je určitě větší než 100 a menší než 1010, tedy $4 \leq k \leq 9$. Vyzkoušením těchto možností zjistíme, že vyhovuje jen $k=8$, tedy $N=11^2\cdot8^2=88^2=7744$.}
+	\item Mějme číslo $n$ zapsané v desítkové soustavě, přičemž jeho cifry zprava doleva
+	klesají. Určete ciferný součet čísla $9n$ (v desítkové
+	soustavě).
+	\\ \textit{Mějme tedy číslo n zapsané v desítkové soustavě jako $a_i \ldots a_1a_0$, kde
+		ze zadání $a_i < \ldots < a_1 < a_0$. Všimněme si, že $9n = 10n - n$. Dále si tedy
+		představíme tato dvě čísla a písemně je odečteme. Díky podmínce na velikosti
+		cifer navíc víme, že přes desítku budeme odečítat pouze v prvním kroku (při
+		odečítání jednotek). \\Po odečtení tedy dostáváme číslo s ciframi $a_i
+		,(a_{i-1} - a_i), \ldots,(a_1 - a_2),(a_0 - a_1 - 1),(10 - a_0)
+		$. \\Součet všech těchto cifer je tedy roven $a_i + (a_{i-1} - a_i) + \ldots + (a_1 - a_2) + (a_0 - a_1 - 1) + (10 - a_0) = 9$.}
+	\item Na tabuli je napsáno v desítkové soustavě celé kladné číslo $N$. Není-li jednomístné,
+	smažeme jeho poslední číslici $c$ a číslo $m$, které na tabuli zůstane, nahradíme číslem
+	$|m - 3c|$. (Například bylo-li na tabuli číslo $N = 1 204$, po úpravě tam bude $120 - 3 \cdot 4 = 108$.) Najděte všechna přirozená čísla $N$, z nichž opakováním popsané
+	úpravy nakonec dostaneme číslo 0.
+	\\ \textit{Řešení: Nejdříve zjistíme, pro která čísla $N$ dostaneme rovnou nulu. Zřejmě $|m-3c|
+		= 0$, právě když $m = 3c$ neboli $N = 10m + c = 31c$. Všechny násobky $N = 31c$ pro
+		$c \in \{1, 2,\ldots , 9\}$ tudíž úloze vyhovují.
+		Dokážeme, že úloze vyhovují právě všechny přirozené násobky čísla 31. Protože $c = N-10m$, je $m-3c = 31m-3N$, takže popsaná operace zachovává dělitelnost číslem 31.
+		Stačí tedy ukázat, že z libovolného násobku $N = 31k$, kde $k \geq 10$, dostaneme popsanou
+		úpravou vždy menší násobek čísla 31. Pro takové N je ovšem $m = 31$, $m - 3c > 0$, tudíž
+		$|m - 3c| = 31m - 3N < 4N- 3N = N$. Znamená to, že po konečném počtu kroků
+		dostaneme popsanou úpravou některý z devíti nejmenších násobků čísla 31 a následně
+		nulu. Tím je úloha vyřešena.}
+\end{enumerate}	
+
+
+\chapter{RSA Algoritmus}
+
+\chapter{Závěr}
+Toto je závěr mé ročníkové práce.
+
+%%% Seznam použité literatury
+\begin{thebibliography}{99}
+
+\bibitem{birge}
+Birge J. R., Wets R. J.-B. (1987): Computing bounds for stochastic programing problems by means of a generalized moment problem. \textit{Mathematics of Operations Research} \textbf{12}, 149-162.
+\end{thebibliography}
+
+%%% Prostor pro přílohy práce
+\chapwithtoc{Přílohy}
+
+\openright
+\end{document}
