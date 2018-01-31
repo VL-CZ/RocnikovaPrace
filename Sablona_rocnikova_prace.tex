@@ -39,11 +39,9 @@
 
 \chapter{Úvod}
 
+\chapter{Teorie čísel}% NÁZVY KAPITOL NEJVYŠŠÍ ÚROVNĚ
 Teorie čísel je odvětví matematiky, které se zabývá čísly a jejich vlastnostmi. Číslem budeme, pokud nebude v zadání řečeno jinak, rozumět přirozené číslo. 
 \\  Praktické využití tohoto oboru je překvapivě velké, s aplikací teorie čísel se rozhodně nesetkáme jen v ostatních oborech matematiky. Zejména v kryptografii a šifrování má teorie čísel velký význam.	Např. jeden z nejznámějších šifrovacích algoritmů RSA je (zjednodušeně řečeno) postaven na předpokladu, že rozložit velké číslo na součin prvočísel je velmi obtížná úloha. Z čísla $n = pq$ je tedy v rozumném čase prakticky nemožné zjistit činitele $p$ a $q$, oproti tomu násobení dvou velkých čísel je triviální úloha.
-
-\chapter{Teorie čísel} % NÁZVY KAPITOL NEJVYŠŠÍ ÚROVNĚ
-
 
 \section{Dělitelnost a kongruence}
 V této sekci se budeme zabývat dělitelností a kongruencemi. K tomu se nám bude hodit, pokud se nejdříve seznámíme s několika základními pojmy a tvrzeními. 
@@ -206,9 +204,9 @@ Kromě těchto tvrzení nám často při řešení úlohy může pomoci nějaký
 
 
 \section{Prvočísla a rozklad na součin}
-Prvočíslo je číslo, které má právě 2 kladné dělitele, a to jedničku a samo sebe. Číslo 1 za prvočíslo nepovažujeme. Jak zjistíme, jestli je číslo $n$ prvočíslo? Můžeme zkoušet všechny čísla od 2 do $n$, nebo chytřeji do $\sqrt{n}$. 
-\\Pomocí tzv. Erastosthenova síta můžeme generovat všechna prvočísla od 2 do $n$. Tento jednoduchý algoritmus funguje „prosíváním“ seznamu čísel – na počátku seznam obsahuje všechna čísla v daném rozsahu $2, 3, 4, \ldots, n$. Poté se opakovaně první číslo ze seznamu vyjme, toto číslo je prvočíslem. Ze seznamu se pak odstraní všechny násobky tohoto čísla (což jsou čísla složená). Tak se pokračuje do doby, než je ze seznamu odstraněno poslední číslo. 
-\\ V mnoha úlohách s prvočísly využijeme rozklad na součin. K čemu nám to je? Vtip je v tom, že dělitelé prvočísla $p$ jsou jen 1 a $p$. Takže pokud rozložíme prvočíslo $p=xy$, tak buď $x=p,y=1$, nebo $y=p,\,x=1$ (Pokud mohou být $x,y$ záporná čísla, tak přibydou ještě možnosti $x=-p,\,y=-1$, resp. $y=-p,\,x=-1$).
+Prvočíslo je číslo, které má právě 2 kladné dělitele, a to jedničku a samo sebe. Číslo 1 za prvočíslo nepovažujeme. Jak zjistíme, jestli je číslo $n$ prvočíslo? Můžeme zkoušet jeho dělitelnost všemi čísly od 2 do $n$, nebo chytřeji do $\sqrt{n}$. 
+\\Pomocí tzv. Erastosthenova síta můžeme generovat všechna prvočísla od 2 do $n$. Tento jednoduchý algoritmus funguje „prosíváním“ seznamu čísel – na počátku seznam obsahuje všechna čísla v daném rozsahu $2, 3, 4, \ldots, n$. Poté se opakovaně první číslo ze seznamu označí, toto číslo je prvočíslem. Ze seznamu se pak odstraní všechny násobky tohoto čísla (což jsou čísla složená). Tak se pokračuje do doby, než je označeno nebo  ze seznamu odstraněno poslední číslo. 
+\\ V mnoha úlohách s prvočísly využijeme rozklad na součin. K čemu nám to je? Můžeme využít toho, že dělitelé prvočísla $p$ jsou jen 1 a $p$. Takže pokud rozložíme prvočíslo $p=xy$, tak buď $x=p,y=1$, nebo $y=p,\,x=1$ (Pokud mohou být $x,y$ záporná čísla, tak přibydou ještě možnosti $x=-p,\,y=-1$, resp. $y=-p,\,x=-1$).
 \\Uvedeme zde několik základních rozkladů mnohočlenů: 
 \begin{description}
 	\item $(a+b)^2=a^2+2ab+b^2$
@@ -350,8 +348,8 @@ Kritéria dělitelnosti můžeme skládat, pro $n=pq$, kde $p,q$ jsou nesouděln
 	\item Najděte nejmenší nezáporné celočíselné řešení rovnice $n-2\cdot S(n)=2016$.
 	\\ \textit{Řešení: Číslo $n-S(n)$ je vždy dělitelné devítkou. Protože je devítkou dělitelné i 2016, musí jí být dělitelné rovněž $S(n)$, a tedy také $n$. Zjevně $n<3000$, takže $S(n)\leq2+9+9+9$, z čehož vyplývá nerovnost $n=2016+2S(n)\leq2074$. Nyní už jen zbývá dosadit $S(n)=9$ a najdeme nejmenší řešení, kterým je 2034.}
 	\item Najděte všechny čtyřciferné druhé mocniny přirozených čísel ve tvaru $\overline{xxyy}$, kde $x$ a $y$ jsou ne nutně různé číslice.
-	\\ \textit{Řešení: Označme hledané čtyřciferné číslo N. Potom $N=1000x+100x+10y+y=110x+11y=\\=11\cdot(10x+y)$, takže N je dělitelné jedenácti. Vzhledem k tomu, že N je čtverec, musí být dělitelné dokonce $11^2$ a můžeme ho zapsat ve tvaru $N = 11^2k^2$, kde k je nějaké přirozené číslo. Při tomto značení platí, že $100x+y = 11k
-		^2$. Levá strana rovnosti je určitě větší než 100 a menší než 1010, tedy $4 \leq k \leq 9$. Vyzkoušením těchto možností zjistíme, že vyhovuje jen $k=8$, tedy $N=11^2\cdot8^2=88^2=7744$.}
+	\\ \textit{Řešení: Označme hledané čtyřciferné číslo N. Potom $N=1000x+100x+10y+y=1100x+11y=\\=11\cdot(100x+y)$, takže N je dělitelné jedenácti. Vzhledem k tomu, že N je čtverec, musí být dělitelné dokonce $11^2$ a můžeme ho zapsat ve tvaru $N = 11^2k^2$, kde k je nějaké přirozené číslo. Při tomto značení platí, že $100x+y = 11k
+		^2$. Levá strana rovnosti je určitě větší nebo rovna 100 a menší než 1010, tedy $4 \leq k \leq 9$. Vyzkoušením těchto možností zjistíme, že vyhovuje jen $k=8$, tedy $N=11^2\cdot8^2=88^2=7744$.}
 	\item Mějme číslo $n$ zapsané v desítkové soustavě, přičemž jeho cifry zprava doleva
 	klesají. Určete ciferný součet čísla $9n$ (v desítkové
 	soustavě).
@@ -380,18 +378,96 @@ Kritéria dělitelnosti můžeme skládat, pro $n=pq$, kde $p,q$ jsou nesouděln
 
 \chapter{RSA Algoritmus}
 
+RSA algoritmus je v současnosti jedním z nejpoužívanějších šifrovacích
+algoritmů.  V roce 1977 jej navrhli Ron Rivest, Adi Shamir a Leonard Adelman. Je založen na myšlence asymetrického šífrování, používá tedy 2 od sebe různé klíče. Jeden z klíčů je používán výhradně k šifrování a nelze jej použít k dešifrování. Druhý klíč je využíván výlučně pro dešifrování a naopak jej nelze použít k šifrování. V praxi je pouze jeden z dvojice klíčů veřejně dostupný, druhý je utajen. Aby byla asymetrická kryptografie skutečně robustní, musí být zaručena praktická nemožnost výpočtu jednoho klíče z druhého.
+\\\\
+Algoritmus je založen na teoreticky jednoduché myšlence: Je snadné vynásobit dvě
+dlouhá (minimálně 100-místná) prvočísla, ale bez jejich znalosti je prakticky nemožné
+zpětně provést rozklad výsledku na původní prvočísla. Součin těchto čísel je tedy
+součástí veřejného klíče. Přitom obě prvočísla potřebujeme pro dešifrování. Vzhledem
+k tomu, že dosud není znám rychlý algoritmus na na prvočíselný rozklad velkého čísla, je
+algoritmus RSA považován za bezpečný
+
+\section{Popis fungování}
+
+\begin{enumerate}
+\item Zvolíme 2 dostatečně velká prvočísla $p$, $q$. V praxi se používají
+prvočísla o velikosti 1024 až 4096 bitů, někdy i delší.
+\item Vypočteme součin $n=p\cdot q$.
+\item Spočítáme hodnotu Eulerovy funkce: $ \varphi(n)=(p-1)(q-1)$. Eulerova funkce se značí $\varphi(n)$ a udává počet všech přirozených čísel $k$ takových, že $1\leq k \leq n$ a $NSD(k,n)=1$, tedy počet všech menších čísel nesoudělných s $n$. Tedy např. $ \varphi(5) = |\{1,2,3,4\}|=4$.
+\item Zvolíme celé číslo $e$ menší než $\varphi(n)$, které je s $\varphi(n)$ nesoudělné.  Číslo $e$ se nazývá veřejný (šifrovací) exponent. 
+\item Zvolíme číslo $d$ takové, že $e\cdot d \equiv 1 \pmod{ \varphi(n)} $.  Číslo $d$ je tzv. soukromý (dešifrovací) exponent.
+\end{enumerate}
+Dvojici $(n,e)$ zveřejníme jako náš veřejný klíč a dvojici $(n,d)$ si ponecháme jako soukromý klíč. Čísla $p, q$ a $\varphi(n)$ musí také zůstat tajná, jelikož mohou být
+použita k vypočítání dešifrovacího exponentu $d$.
+\\\\
+Pokud chceme poslat zprávu $M$, tak ji musíme nejdříve
+převést na celé číslo $m$, pro které platí, že $0 \leq m < n$. To se provádí
+pomocí předem dohodnutého reverzibilního protokolu.
+\\\\Poté zašifrujeme zprávu pomocí rovnice $c \equiv m^e \pmod n$ a odešleme ji\footnote{Jako $d,e$ označujeme v tomto případě exponenty příjemce}. Příjemce získá zašifrovanou zprávu $c$. Tu poté odšifruje pomocí rovnice $m \equiv c^d \pmod n$. Nikdo kromě něj není schopen zprávu efektivně dešifrovat, protože hodnotu $d$ zná jen příjemce.
+
+\subsection*{Důkaz správnosti}
+Příjemce získá zašifrovaný text $c$. Původní zprávu $m$ získá pomocí rovnice
+$m \equiv c^d \pmod n$. Nyní dokážeme, že takto opravdu získá původní zprávu.
+$$c^d \equiv (m^e)^d \equiv m^{ed} \pmod n$$
+Jelikož podle definice $d$ platí $ed-1 \equiv 0 \pmod{(p-1)(q-1)}$, tak $p-1$ i $q-1$ dělí $ed-1$. Tedy $ed-1=h(p-1)=k(q-1)$ pro nějaká celá čísla $h,k$.
+\\Pokud jsou $m,p$ nesoudělná, tak podle Malé Fermatovy věty\footnote{Malá Fermatova věta tvrdí, že pro každé prvočíslo $p$ a každé celé číslo $a$ takové, že $NSD(a,p)=1$, \break platí $a^{p-1} \equiv 1 \pmod p$}
+$$m^{ed}=m^{ed-1}m=m^{h(p-1)}m=\left(m^{p-1}\right)^h m \equiv 1^h m \equiv m \pmod p$$
+Naopak pokud jsou $m,p$ soudělná, pak $p \mid m$, tedy $p \mid m^{ed}$. Z toho vyplývá, že $m^{ed} \equiv 0 \equiv m \pmod p$
+\\Tedy $m^{ed} \equiv m \pmod p$. Podobně ukážeme, že $m^{ed} \equiv m \pmod q$.
+\\Protože $p,q$ jsou 2 různá prvočísla a $pq=n$, tak pomocí čínské věty o zbytcích: \\$m^{ed} \equiv m \pmod n$, tedy $c^d \equiv m \pmod n$
+\section{Příklad}
+Uvedu příklad komunikace mezi Alicí a Bobem. 
+\\Alice si vytvoří soukromý a veřejný klíč, aby ho mohla využít pro zabezpečení
+komunikace. Nejdříve si musí zvolit dvě libovolná prvočísla $p,q$, tedy například $p=101,q=113$. Pak spočítá jejich součin $n=p\cdot q=101 \cdot 113 = 11413$
+a hodnotu Eulerovy funkce $\varphi(n) = (101-1)(113-1)=11200$. Aby mohla
+určit veřejný exponent, musí zvolit takové číslo $e$ pro které platí, že $1 <e <11200$ a zároveň je s číslem 11200 nesoudělné. Alice si vybrala např. $e=3533$. Nakonec
+musí Alice vypočítat $d$ ze vztahu $3533 \cdot d \equiv 1 \pmod {11200}$, tedy $d=6597$. Tuto hodnotu můžeme spočítat pomocí rozšířeného Euklidova algoritmu. Nyní může Alice veřejný klíč, tedy dvojici ($n =11413, e =3533$) zveřejnit.
+\\\\Nyní chce Bob Alici poslat zprávu $m = 9726$, musí tedy vypočítat $c \equiv m^e \pmod n$, tedy $c\equiv 8723^{3533} \pmod{11431}=5761$. Zašifrovanou zprávu $c=5761$ pošle Alici, která ji dešifruje pomocí svého soukromého klíče výpočtem $m \equiv c^d \pmod n$, tedy $m \equiv 5761^{6597} \pmod {11413}=9723$.
+\\\\Tento příklad by v praxi nebyl bezpečný, protože použitá prvočísla jsou příliš malá.
+
 \chapter{Závěr}
-Toto je závěr mé ročníkové práce.
+
 
 %%% Seznam použité literatury
 \begin{thebibliography}{99}
 
-\bibitem{birge}
-Birge J. R., Wets R. J.-B. (1987): Computing bounds for stochastic programing problems by means of a generalized moment problem. \textit{Mathematics of Operations Research} \textbf{12}, 149-162.
+\bibitem{}
+Birge J. R., Wets R. J.-B. (1987): Computing bounds for stochastic programing problems by means of a generalized moment problem. \textit{Mathematics of Operations Research}
+
+\bibitem{}
+Lenka Slavíková \textit{Teorie čísel.} Dostupné z: http://mks.mff.cuni.cz/library/Teorie\break CiselLS/TeorieCiselLS.pdf, 2009
+
+\bibitem{}
+Vilém Vychodil: \textit{Algoritmus RSA.} Dostupné z: http://vychodil.inf.upol.cz\break/publications/white-papers/rsa.pdf 
+
+\bibitem{}
+Matúš Drobuliak: \textit{RSA šifra.} Dostupné z: http://www.karlin.mff.cuni.cz/~tuma\break/Aplikace15/Prace15/Drobuliak\_RSA.pdf
+
+\bibitem{}
+Stanislav Froula: \textit{RSA algoritmus a jeho využití
+v elektronické komunikaci s orgány
+státní správy
+.} Dostupné z: https://theses.cz/id/tmrhys/BP-FROULA.pdf
+
+\bibitem{}
+Matematický korespondenční seminář: \textit{Archiv úloh z MKS.} Dostupné z: http://mks.mff.cuni.cz/archive/archive.php
+
+\bibitem{}
+Mezinárodní korespondenční seminář: \textit{Archiv úloh TRiKS.} Dostupné z: http://iksko.org/triks/past.php 
+
+\bibitem{}
+Matematický NÁBOJ: \textit{Archiv úloh.} Dostupné z: https://math.naboj.org/archive.php
+
+\bibitem{}
+Matematická olympiáda: \textit{Archiv úloh z MO.} Dostupné z: http://www.matematickaolympiada.cz/cs/olympiada-pro-stredni-skoly
+
+\bibitem{}
+Slovenská matematická olympiáda: \textit{Archiv úloh.} Dostupné z: https://skmo.sk/dokumenty.php
 \end{thebibliography}
 
 %%% Prostor pro přílohy práce
-\chapwithtoc{Přílohy}
+%\chapwithtoc{Přílohy}
 
 \openright
 \end{document}
